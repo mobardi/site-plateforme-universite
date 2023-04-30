@@ -26,6 +26,8 @@
             <a href="{{ route('users.index') }}" class="btn btn-outline-primary">Liste des utilisateurs</a>
             <a href="{{ route('cours.index') }}" class="btn btn-outline-primary">Liste des cours</a>
             <a href="{{ route('formations.index') }}" class="btn btn-outline-primary">Liste des formations</a>
+            <a href="{{ route('admin.planning') }}" class="btn btn-outline-primary">Voir les plannings</a>
+
             @endif
 
             <!-- Dashboard Etudiant -->

@@ -126,6 +126,18 @@ Route::put('/admin/formations/{formation}',[MainController::class, 'formationsUp
 // Supprimer une formation de la base de données
 Route::delete('/admin/formations/{formation}', [MainController::class, 'formationsDelete'])->name('formations.delete');
 
+// Plannings
+Route::get('/admin/planning', [MainController::class, 'adminPlanning'])->name('admin.planning');
+Route::get('/admin/planning/create', [MainController::class, 'adminSeanceCreate'])->name('admin.seancecreate');
+Route::post('/admin/planning', [MainController::class, 'adminSeanceStore'])->name('admin.seancestore');
+Route::get('/admin/planning/{planning}/edit', [MainController::class, 'adminSeanceEdit'])->name('admin.seanceedit');
+Route::put('/admin/planning/{planning}', [MainController::class, 'adminSeanceUpdate'])->name('admin.seanceupdate');
+Route::delete('/admin/planning/{planning}', [MainController::class, 'adminSeanceDelete'])->name('admin.seancedelete');
+
+
+
+
+
 
 
 //----------ETUDIANT----------\\

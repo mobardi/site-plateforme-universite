@@ -424,4 +424,91 @@ class MainController extends Controller {
         // Afficher la vue avec les plannings
         return view('etudiant.planning', ['plannings' => $plannings]);
     }
+
+    public function adminPlanning()
+    {
+    if (auth()->user()->type !== 'admin') {
+        abort(403, 'Unauthorized action.');
+    }
+    
+    // Récupérer tous les plannings
+    $plannings = Planning::all();
+    
+    // Afficher la vue avec les plannings
+    return view('admin.planning', ['plannings' => $plannings]);
+    }
+
+
+    public function adminSeanceCreate()
+    {
+        if (auth()->user()->type !== 'admin') {
+        abort(403, 'Unauthorized action.');
+        }
+    
+    // Récupérer tous les cours
+    $cours = Cours::all();
+
+    // Récupérer toutes les enseignants
+    $enseignants = User::where('type', 'enseignant')->get();
+
+    return view('admin.seancecreate', ['cours'=>$cours, 'enseignants'=>$enseignants]);
+    }
+
+    public function adminSeanceStore(Request $request)
+    {
+    $request->validate([
+        'date_debut' => 'required|date|after:yesterday',
+        'date_fin' => 'required|date|after:date_debut',
+        'cours_id' => 'required|exists:cours,id',
+    ]);
+
+    $planning = new Planning();
+    $planning->date_debut = $request->input('date_debut');
+    $planning->date_fin = $request->input('date_fin');
+    $planning->cours_id = $request->input('cours_id');
+    $planning->save();
+
+    return redirect()->route('admin.planning')->with('success', 'La séance a été ajoutée avec succès.');
+    }
+
+
+    public function adminSeanceEdit(Planning $planning)
+    {
+        if (auth()->user()->type !== 'admin') {
+        abort(403, 'Unauthorized action.');
+        }
+
+        $cours = Cours::all();
+
+        return view('admin.seanceedit', ['planning' => $planning, 'cours' => $cours]);
+    }
+
+    public function adminSeanceUpdate(Request $request, Planning $planning)
+    {
+        $request->validate([
+            'cours_id' => 'required|exists:cours,id',
+            'date_debut' => 'required|date|after:now',
+            'date_fin' => 'required|date|after:date_debut',
+        ]);
+
+        $planning->cours_id = $request->cours_id;
+        $planning->date_debut = $request->date_debut;
+        $planning->date_fin = $request->date_fin;
+        $planning->save();
+
+        return redirect()->route('admin.planning')->with('success', 'Séance modifiée');
+    }
+
+    public function adminSeanceDelete(Planning $planning)
+    {
+        if (auth()->user()->type !== 'admin') {
+        abort(403, 'Unauthorized action.');
+        }
+
+    $planning->delete();
+    return redirect()->route('admin.planning')->with('success', 'Séance supprimée');
+    }
+
+
+
 }
